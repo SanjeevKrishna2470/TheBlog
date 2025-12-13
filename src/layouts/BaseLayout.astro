@@ -1,0 +1,267 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "A cyberpunk hacker blog" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="cursor-glow"></div>
+  
+  <header>
+    <div class="container">
+      <nav>
+        <a href="/" class="logo">
+          <span class="glitch" data-text="[CYBER_BLOG]">[CYBER_BLOG]</span>
+        </a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/blog">Blog</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 <span class="neon-text">CYBER_BLOG</span> | Built with Astro</p>
+      <p class="terminal-text">// End of transmission...</p>
+    </div>
+  </footer>
+
+  <style is:global>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #1a1a1a;
+      --neon-cyan: #00ffea;
+      --neon-pink: #ff0080;
+      --neon-orange: #ffaa00;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Roboto Mono', monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 234, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 255, 234, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+
+    body:hover .cursor-glow {
+      opacity: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 2rem 0;
+      border-bottom: 2px solid var(--neon-cyan);
+      box-shadow: 0 2px 20px rgba(0, 255, 234, 0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch:hover::before,
+    .glitch:hover::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch:hover::before {
+      animation: glitch-1 0.3s infinite;
+      color: var(--neon-pink);
+      z-index: -1;
+    }
+
+    .glitch:hover::after {
+      animation: glitch-2 0.3s infinite;
+      color: var(--neon-orange);
+      z-index: -2;
+    }
+
+    @keyframes glitch-1 {
+      0%, 100% { transform: translate(0); }
+      33% { transform: translate(-2px, 2px); }
+      66% { transform: translate(2px, -2px); }
+    }
+
+    @keyframes glitch-2 {
+      0%, 100% { transform: translate(0); }
+      33% { transform: translate(2px, -2px); }
+      66% { transform: translate(-2px, 2px); }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 400;
+      position: relative;
+      padding: 0.5rem 1rem;
+      transition: all 0.3s;
+    }
+
+    .nav-links a::before {
+      content: '> ';
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--neon-cyan);
+    }
+
+    .nav-links a:hover::before {
+      opacity: 1;
+    }
+
+    main {
+      flex: 1;
+      padding: 4rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer {
+      padding: 2rem 0;
+      border-top: 2px solid var(--neon-pink);
+      box-shadow: 0 -2px 20px rgba(255, 0, 128, 0.3);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    .neon-text {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+    .terminal-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .logo {
+        font-size: 1.3rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('mousemove', (e) => {
+      const glow = document.querySelector('.cursor-glow');
+      if (glow) {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+      }
+    });
+  </script>
+</body>
+</html>

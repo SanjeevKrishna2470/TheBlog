@@ -1,0 +1,211 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="container">
+    <header class="post-header">
+      <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+        {post.data.pubDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}
+      </time>
+      <h1 class="post-title">{post.data.title}</h1>
+      <p class="post-description">{post.data.description}</p>
+      <div class="divider"></div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <a href="/blog" class="back-link">← Back to Blog</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .post-date {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--neon-orange);
+    background: rgba(255, 170, 0, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    margin: 1rem 0;
+    line-height: 1.2;
+    text-shadow: 0 0 20px rgba(0, 255, 234, 0.5);
+  }
+
+  .post-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin: 1.5rem auto;
+    max-width: 700px;
+  }
+
+  .divider {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    margin: 2rem auto;
+  }
+
+  .prose {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .prose :global(h2) {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    color: var(--neon-cyan);
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(0, 255, 234, 0.3);
+  }
+
+  .prose :global(h3) {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: var(--neon-pink);
+    margin: 2rem 0 1rem;
+  }
+
+  .prose :global(p) {
+    margin: 1.5rem 0;
+    color: var(--text-primary);
+  }
+
+  .prose :global(a) {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    border-bottom: 1px solid var(--neon-cyan);
+    transition: all 0.3s;
+  }
+
+  .prose :global(a:hover) {
+    color: var(--neon-pink);
+    border-bottom-color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink);
+  }
+
+  .prose :global(code) {
+    background: rgba(0, 255, 234, 0.1);
+    color: var(--neon-cyan);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95em;
+  }
+
+  .prose :global(pre) {
+    background: #1a1a1a;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+    box-shadow: 0 0 20px rgba(0, 255, 234, 0.2);
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--neon-pink);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: rgba(255, 0, 128, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .prose :global(ul), .prose :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+
+  .prose :global(li) {
+    margin: 0.5rem 0;
+  }
+
+  .prose :global(img) {
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 30px rgba(0, 255, 234, 0.3);
+    margin: 2rem 0;
+  }
+
+  .post-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(0, 255, 234, 0.3);
+    text-align: center;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--neon-cyan);
+    text-decoration: none;
+    font-weight: 700;
+    padding: 0.8rem 2rem;
+    border: 2px solid var(--neon-cyan);
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+
+  .back-link:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-primary);
+    box-shadow: 0 0 20px var(--neon-cyan);
+  }
+
+  @media (max-width: 768px) {
+    .post-title {
+      font-size: 2rem;
+    }
+
+    .prose {
+      font-size: 1rem;
+    }
+  }
+</style>
